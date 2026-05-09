@@ -20,15 +20,15 @@ public class LogEntry {
 			throw new IllegalArgumentException("Invalid status.");
 		}
 
-		if (ip == null ||ip.isBlank()) {
+		if (ip == null || ip.isBlank()) {
 			throw new IllegalArgumentException("Invalid/Empty IP address.");
 		}
 
 		if (username == null || username.isBlank()) {
 			throw new IllegalArgumentException("Invalid/Empty username.");
 		}
-		
-		if(timeStamp == null) {
+
+		if (timeStamp == null) {
 			throw new IllegalArgumentException("Invalid/Empty timestamp.");
 		}
 
@@ -41,24 +41,12 @@ public class LogEntry {
 		return "ACTION=" + action;
 	}
 
-	public void setAction(String action) {
-		this.action = action;
-	}
-
 	public String getStatus() {
 		return "STATUS=" + status;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
 	public ZonedDateTime getTimeStamp() {
 		return timeStamp;
-	}
-
-	public void setTimeStamp(ZonedDateTime timeStamp) {
-		this.timeStamp = timeStamp;
 	}
 
 	public String getUsername() {
