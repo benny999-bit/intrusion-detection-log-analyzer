@@ -20,17 +20,17 @@ public class MainProgram {
 	public static void main(String[] args) throws IOException {
 		MainProgram main = new MainProgram();
 		main.start();
-
 	}
 
 	public void start() throws IOException {
-		String demo = "C:/Users/smithbd/Downloads/exampleLogformat.txt";
-		Path path = Paths.get(demo);
+		String demoPath = "C:/Users/smithbd/Downloads/exampleLogformat.txt";
+		Path path = Paths.get(demoPath);
 		this.parser = new LogParser(path);
-		List<LogEntry> list = this.parser.getLogEntries();
+		List<LogEntry> list = this.parser.listCopy();
 		for (LogEntry entry : list) {
-			System.out.println(entry.getTimeStamp() + " " + entry.getIp() + " " + entry.getUsername() + " "
-					+ entry.getAction() + " " + entry.getStatus());
+			System.out.println(entry.getTimestamp() + " " + "IP=" + entry.getIp() + " " + "USER=" + entry.getUsername()
+					+ " " + "ACTION=" + entry.getAction() + " " + "STATUS=" + entry.getStatus());
 		}
+
 	}
 }

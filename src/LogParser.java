@@ -14,66 +14,54 @@ public class LogParser {
 		this.entries = new ArrayList<>();
 
 		List<String> lines = Files.readAllLines(path);
-
 		for (String line : lines) {
 			String[] split = line.split(" ");
 			if (split.length != 6) {
 				continue;
 			}
-			String date = split[0];
-			String time = split[1];
 
-			int firstDate = date.indexOf("-");
-			int lastDate = date.lastIndexOf("-");
-			int firstTime = time.indexOf(":");
-			int lastTime = time.lastIndexOf(":");
+			String initialDate = split[0];
+			String initialTime = split[1];
+			int firstindexDate = initialDate.indexOf("-");
+			int lastindexDate = initialDate.lastIndexOf("-");
 
-			String year = date.substring(0, firstDate);
-			String month = date.substring(firstDate + 1, lastDate);
-			String day = date.substring(lastDate + +1, date.length());
+			String year = initialDate.substring(0, firstindexDate);
+			String month = initialDate.substring(firstindexDate + 1, lastindexDate);
+			String day = initialDate.substring(lastindexDate + 1, initialDate.length());
 
-			String hour = time.substring(0, firstTime);
-			String minute = time.substring(firstTime + 1, lastTime);
-			String second = time.substring(lastTime + 1, time.length());
+			int firstindexTime = initialTime.indexOf(":");
+			int lastindexTime = initialTime.lastIndexOf(":");
 
-			int yeartoInt = Integer.parseInt(year);
-			int monthtoInt = Integer.parseInt(month);
-			int daytoInt = Integer.parseInt(day);
+			String hour = initialTime.substring(0, firstindexTime);
+			String minute = initialTime.substring(firstindexTime + 1, lastindexTime);
+			String second = initialTime.substring(lastindexTime + 1, initialTime.length());
 
-			int hourToInt = Integer.parseInt(hour);
-			int minuteToInt = Integer.parseInt(minute);
-			int secondToInt = Integer.parseInt(second);
+			ZonedDateTime timeStamp = ZonedDateTime.of(Integer.parseInt(year), Integer.parseInt(month),
+					Integer.parseInt(day), Integer.parseInt(hour), Integer.parseInt(minute), Integer.parseInt(second),
+					0, ZoneId.systemDefault());
 
-			String ipStart = split[2];
-			String username = split[3];
+			String initialIp = split[2];
+			int firstindexIp = initialIp.indexOf("=");
+			String ip = initialIp.substring(firstindexIp + 1, initialIp.length());
 
-			int usernameStart = username.indexOf("=");
-			String name = username.substring(usernameStart + 1, username.length());
+			String initialUsername = split[3];
+			int indexUser = initialUsername.indexOf("=");
+			String username = initialUsername.substring(indexUser + 1, initialUsername.length());
 
-			int index = ipStart.indexOf("=");
-			String ip = ipStart.substring(index + 1, ipStart.length());
+			String initialAction = split[4];
+			int indexAction = initialAction.indexOf("=");
+			String action = initialAction.substring(indexAction + 1, initialAction.length());
 
-			String action = split[4];
-			int equal = action.indexOf("=");
-			String loginOrLogout = action.substring(equal + 1, action.length());
+			String initialStatus = split[5];
+			int indexStatus = initialStatus.indexOf("=");
+			String status = initialStatus.substring(indexStatus + 1, initialStatus.length());
 
-			String status = split[5];
-			int temp = status.indexOf("=");
-			String failedOrSuccess = status.substring(temp + 1, status.length());
-
-			ZonedDateTime timeStamp = ZonedDateTime.of(yeartoInt, monthtoInt, daytoInt, hourToInt, minuteToInt,
-					secondToInt, 0, ZoneId.systemDefault());
-
-			LogEntry entry = new LogEntry(name, ip, loginOrLogout, failedOrSuccess, timeStamp);
+			LogEntry entry = new LogEntry(timeStamp, ip, username, action, status);
 			this.entries.add(entry);
-
-//			System.out.println(entry.getTimeStamp() + " " + entry.getIp() + " " + entry.getUsername() + " "
-//					+ entry.getAction() + " " + entry.getStatus());
-
 		}
 	}
 
-	public List<LogEntry> getLogEntries() {
+	public List<LogEntry> listCopy() {
 		return Collections.unmodifiableList(this.entries);
 	}
 

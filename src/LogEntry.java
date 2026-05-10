@@ -1,60 +1,56 @@
 import java.time.ZonedDateTime;
 
 public class LogEntry {
-	private String username;
+	private ZonedDateTime timeStamp;
 	private String ip;
+	private String username;
 	private String action;
 	private String status;
-	private ZonedDateTime timeStamp;
 
-	public LogEntry(String username, String ip, String action, String status, ZonedDateTime timeStamp) {
-		if (action != null && ((action.equals("LOGIN")) || (action.equals("LOGOUT")))) {
-			this.action = action;
-		} else {
-			throw new IllegalArgumentException("Invalid action.");
-		}
-
-		if (status != null && ((status.equals("SUCCESS")) || (status.equals("FAILED")))) {
-			this.status = status;
-		} else {
-			throw new IllegalArgumentException("Invalid status.");
-		}
-
+	public LogEntry(ZonedDateTime timeStamp, String ip, String username, String action, String status) {
 		if (ip == null || ip.isBlank()) {
-			throw new IllegalArgumentException("Invalid/Empty IP address.");
+			throw new IllegalArgumentException("Invalid/Empty ip.");
 		}
-
 		if (username == null || username.isBlank()) {
 			throw new IllegalArgumentException("Invalid/Empty username.");
 		}
-
+		if (action != null && ((action.equals("LOGIN")) || (action.equals("LOGOUT")))) {
+			this.action = action;
+		} else {
+			throw new IllegalArgumentException("Invalid/Empty action.");
+		}
+		if (status != null && ((status.equals("SUCCESS")) || (status.equals("FAILED")))) {
+			this.status = status;
+		} else {
+			throw new IllegalArgumentException("Invalid/Empty status.");
+		}
 		if (timeStamp == null) {
-			throw new IllegalArgumentException("Invalid/Empty timestamp.");
+			throw new IllegalArgumentException("Empty timestamp.");
 		}
 
-		this.username = username;
-		this.ip = ip;
 		this.timeStamp = timeStamp;
+		this.ip = ip;
+		this.username = username;
 	}
 
-	public String getAction() {
-		return "ACTION=" + action;
-	}
-
-	public String getStatus() {
-		return "STATUS=" + status;
-	}
-
-	public ZonedDateTime getTimeStamp() {
-		return timeStamp;
-	}
-
-	public String getUsername() {
-		return "USER=" + username;
+	public ZonedDateTime getTimestamp() {
+		return this.timeStamp;
 	}
 
 	public String getIp() {
-		return "IP=" + ip;
+		return this.ip;
+	}
+
+	public String getUsername() {
+		return this.username;
+	}
+
+	public String getAction() {
+		return this.action;
+	}
+
+	public String getStatus() {
+		return this.status;
 	}
 
 }
