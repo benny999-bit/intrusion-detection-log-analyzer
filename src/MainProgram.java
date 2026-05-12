@@ -46,6 +46,22 @@ public class MainProgram {
 		} else {
 			System.out.println(result.toString());
 		}
+		System.out.println("Alerts:");
+		System.out.println();
+		StringBuilder alerts = new StringBuilder();
+		for (String ip : this.detect.getAlertsCopy().keySet()) {
+			Alert alert = this.detect.getAlertsCopy().get(ip);
+			alerts.append("IP: " + ip);
+			alerts.append("\n");
+			alerts.append("Severity: " + alert.getSeverity());
+			alerts.append("\n");
+			alerts.append("Type: " + alert.getType());
+			alerts.append("\n");
+			alerts.append("Reason: " + alert.getReason());
+			alerts.append("\n");
+			alerts.append("\n");
+		}
+		System.out.println(alerts.toString());
 
 	}
 }
