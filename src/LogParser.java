@@ -9,9 +9,11 @@ import java.util.List;
 
 public class LogParser {
 	private ArrayList<LogEntry> entries;
+	
 
 	public LogParser(Path path) throws IOException {
 		this.entries = new ArrayList<>();
+		
 
 		List<String> lines = Files.readAllLines(path);
 		for (String line : lines) {
