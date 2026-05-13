@@ -19,7 +19,6 @@ public class DetectionEngine {
 	public boolean addFailedLogins(LogEntry entry) {
 		if (entry.getStatus().equals("FAILED") && entry.getAction().equals("LOGIN")) {
 			int count = this.failedLogins.getOrDefault(entry.getIp(), 0);
-//			int countFailedLogins = this.failedLogins.get(entry.getIp());
 			this.failedLogins.put(entry.getIp(), count + 1);
 			if (this.failedLogins.get(entry.getIp()) == 3) {
 				this.suspicious.add(entry.getIp());
