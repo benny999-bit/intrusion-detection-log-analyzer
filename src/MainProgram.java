@@ -30,12 +30,11 @@ public class MainProgram {
 		this.parser = new LogParser(path);
 		List<LogEntry> list = this.parser.listCopy();
 		this.detect = new DetectionEngine();
-		for(LogEntry entry : list) {
+		for (LogEntry entry : list) {
 			this.detect.addFailedLogins(entry);
 		}
 		this.genrator = new ReportGenerator(list);
 		this.genrator.generateSecurityReport(this.detect, list.size());
-		
 
 	}
 }

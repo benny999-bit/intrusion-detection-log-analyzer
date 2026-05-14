@@ -1,3 +1,6 @@
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,11 +11,13 @@ public class DetectionEngine {
 	private HashMap<String, Integer> failedLogins;
 	private HashMap<String, Alert> alerts;
 	private HashSet<String> suspicious;
+	private HashMap<String, ArrayList<ZonedDateTime>> ipTimestamps;
 
 	public DetectionEngine() {
 		this.failedLogins = new HashMap<>();
 		this.suspicious = new HashSet<>();
 		this.alerts = new HashMap<>();
+		this.ipTimestamps = new HashMap<>();
 
 	}
 
@@ -20,20 +25,18 @@ public class DetectionEngine {
 		if (entry.getStatus().equals("FAILED") && entry.getAction().equals("LOGIN")) {
 			int count = this.failedLogins.getOrDefault(entry.getIp(), 0);
 			this.failedLogins.put(entry.getIp(), count + 1);
-			if (this.failedLogins.get(entry.getIp()) == 3) {
-				this.suspicious.add(entry.getIp());
-				Alert alert = new Alert("LOW", "BRUTE_FORCE_ATTEMPT", entry.getIp(), "EXCESSIVE LOGIN FAILS",
-						this.failedLogins.get(entry.getIp()));
-				this.alerts.put(entry.getIp(), alert);
-			} else if (this.failedLogins.get(entry.getIp()) > 3) {
+			ArrayList<ZonedDateTime> list = this.ipTimestamps.getOrDefault(entry.getIp(),
+					new ArrayList<ZonedDateTime>());
+			list.add(entry.getTimestamp());
+			this.ipTimestamps.put(entry.getIp(), list);
+			if ((this.failedLogins.get(entry.getIp()) >= 3) && checkTimeStamps(this.ipTimestamps.get(entry.getIp()))) {
 				if (this.alerts.get(entry.getIp()) != null) {
 					Alert alert = this.alerts.get(entry.getIp());
-					alert.increaseFailedLoginCount();
-					alert.setSeverity();
+					alert.setSeverity(this.failedLogins.get(entry.getIp()));
 				} else {
-					Alert alert = new Alert("LOW", "BRUTE_FORCE_ATTEMPT", entry.getIp(), "EXCESSIVE LOGIN FAILS",
-							this.failedLogins.get(entry.getIp()));
-					alert.setSeverity();
+					this.suspicious.add(entry.getIp());
+					Alert alert = new Alert("LOW", "BRUTE_FORCE_ATTEMPT", entry.getIp(), "EXCESSIVE LOGIN FAILS");
+					alert.setSeverity(this.failedLogins.get(entry.getIp()));
 					this.alerts.put(entry.getIp(), alert);
 				}
 			}
@@ -41,6 +44,20 @@ public class DetectionEngine {
 			return true;
 		}
 		return false;
+	}
+
+	public boolean checkTimeStamps(ArrayList<ZonedDateTime> list) {
+		// 1 2 3 4 5
+		for (int i = 0; i < list.size() - 2; i++) {
+			ZonedDateTime previous = list.get(i);
+			ZonedDateTime current = list.get(i + 2);
+			long duration = previous.until(current, ChronoUnit.SECONDS);
+			if (duration <= 120) {
+				return true;
+			}
+		}
+		return false;
+
 	}
 
 	public String allFailedLogins() {
