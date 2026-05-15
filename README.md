@@ -27,6 +27,14 @@ Alerts are warnings detected when a ip has failed multiple times logging in. The
 
 A brute force detection is triggered when a IP has failed a login at least 3 times on the same ip address in a 2 minute time-window.
 
+#### Time-window analysis:
+Time-window works in a two minute window, if 3 failed attempts have occurred in a two minute window a log is eligible for detection.
+
+
+#### Severity escalation: 
+For severity to bump up to medium failed logins must reach a number of at least 5, to bump up to high at least 10. 
+
+
 ### Username Spraying detection:
 A username spraying detection is triggered when a user has failed a login with same IP attempts and multiple usernames in a 2 minute time-window.
 
