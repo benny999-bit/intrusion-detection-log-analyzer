@@ -12,11 +12,11 @@ import java.util.List;
 
 public class MainProgram {
 	private LogParser parser;
-	private ReportGenerator genrator;
 	private DetectionEngine detect;
+	private ReportGenerator report;
 
 	public MainProgram() {
-
+		this.report = new ReportGenerator();
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -28,13 +28,13 @@ public class MainProgram {
 		String demoPath = "C:/Users/smithbd/Downloads/exampleLogformat.txt";
 		Path path = Paths.get(demoPath);
 		this.parser = new LogParser(path);
-		List<LogEntry> list = this.parser.listCopy();
 		this.detect = new DetectionEngine();
+		List<LogEntry> list = this.parser.listCopy();
 		for (LogEntry entry : list) {
-			this.detect.addFailedLogins(entry);
+			this.detect.addFailedLogin(entry);
+			this.detect.usernameSprayingDetection(entry);
 		}
-		this.genrator = new ReportGenerator(list);
-		this.genrator.generateSecurityReport(this.detect, list.size());
+		report.securityReport(detect, list.size());
 
 	}
 }
